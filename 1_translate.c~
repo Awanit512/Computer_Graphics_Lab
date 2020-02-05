@@ -70,21 +70,12 @@ void display (void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	if(shape==S_CIRCLE)
 	{
-		glColor3f(0.3, 0.0, 0.1);
-		circle(cx,cy,r,0,0);
-		glColor3f(0.0, 1.0, 0.0);
 		circle(cx,cy,r,tx,ty);
 	}else if(shape==S_POLYGON)
 	{
-		glColor3f(0.3, 0.0, 0.1);
-		polygon(A,B,n,0,0);
-		glColor3f(0.0, 1.0, 0.0);
 		polygon(A,B,n,tx,ty);
 	}else if(shape==S_LINE)
 	{
-		glColor3f(0.3, 0.0, 0.1);
-		line(x1,py1,x2,y2,0,0);
-		glColor3f(0.0, 1.0, 0.0);
 		line(x1,py1,x2,y2,tx,ty);
 	}
 	
