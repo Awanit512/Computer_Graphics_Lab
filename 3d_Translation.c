@@ -2,8 +2,8 @@
 #include<GL/glut.h> 
 #include<math.h>
 
-int cx[8]={-100,0,200,200,0,-100,100,100},cy[]={-100,0,0,200,200,100,100,-100},cz[]={0,100,100,100,100,0,0,0};
-int tx=0,ty=0,tz=0;
+int cx[]={-100,0,200,200,0,-100,100,100,200},cy[]={-100,0,0,200,200,100,100,-100,200},cz[]={0,100,100,100,100,0,0,0,100};
+int tx=0,ty=0,tz=0,flag=0;
 void initGL() {
    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
    glClearDepth(1.0f);                   // Set background depth to farthest
@@ -20,6 +20,13 @@ void drawQuad(int a,int b,int c, int d)
 	glVertex3i(cx[b],cy[b],cz[b]);
 	glVertex3i(cx[c],cy[c],cz[c]);
 	glVertex3i(cx[d],cy[d],cz[d]);
+}
+
+void drawTriangle(int a,int b,int c)
+{
+	glVertex3i(cx[a],cy[a],cz[a]);
+	glVertex3i(cx[b],cy[b],cz[b]);
+	glVertex3i(cx[c],cy[c],cz[c]);
 }
 
 void display() {
@@ -67,8 +74,52 @@ void display() {
    glutSwapBuffers();  
 }
 
+void display11() {
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	   glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+
+	glBegin(GL_TRIANGLES);
+		glColor3f(0.0f, 1.0f, 1.0f);
+		drawQuad(0,5,6,7);
+		glColor3f(0.4f, 0.5f, 1.0f);
+		drawTriangle(5,6,8);
+		glColor3f(0.2f, 0.5f, 0.1f);
+		drawTriangle(6,7,8);
+		glColor3f(0.5f, 0.1f, 0.2f);
+		drawTriangle(0,7,8);
+		glColor3f(0.1f, 0.2f, 0.5f);
+		drawTriangle(5,0,8);
+	glEnd();
+	
+	int i;
+	for(i=0;i<9;i++)
+	{
+		cx[i]+=tx;
+		cy[i]+=ty;
+		cz[i]+=tz;
+	}	
+	
+	glBegin(GL_QUADS);
+		glColor3f(0.0f, 1.0f, 1.0f);
+		drawQuad(0,5,6,7);
+		glColor3f(0.4f, 0.5f, 1.0f);
+		drawTriangle(5,6,8);
+		glColor3f(0.4f, 1.0f, 0.3f);
+		drawTriangle(6,7,8);
+		glColor3f(1.0f, 0.3f, 0.4f);
+		drawTriangle(0,7,8);
+		glColor3f(0.3f, 0.4f, 1.0f);
+		drawTriangle(5,0,8);
+	glEnd();
+   glutSwapBuffers();  
+}
 
 int main(int argc, char** argv) {
+	printf("Choose 0: CUBE  1: Pyramid\n");
+	scanf("%d",&flag);
+	if(flag!=0 && flag!=1)
+		flag=0;
 	printf("Enter tx,ty,tz\n");
 	scanf("%d %d %d",&tx,&ty,&tz);
 
@@ -78,7 +129,10 @@ int main(int argc, char** argv) {
     glutInitWindowPosition(0, 0);  // Position the window's initial top-left corner
    glutCreateWindow("3D Translation");          // Create window with the given title
   
+  if(flag==0)
    glutDisplayFunc(display);       // Register callback handler for window re-paint event
+   else
+   glutDisplayFunc(display11);
    initGL();                       // Our own OpenGL initialization
    glutMainLoop();                 // Enter the infinite event-processing loop
    return 0;
