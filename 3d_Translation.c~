@@ -3,6 +3,7 @@
 #include<math.h>
 
 int cx[]={-100,0,200,200,0,-100,100,100,200},cy[]={-100,0,0,200,200,100,100,-100,200},cz[]={0,100,100,100,100,0,0,0,100};
+int rx[]={-100,0,200,200,0,-100,100,100,200},ry[]={-100,0,0,200,200,100,100,-100,200},rz[]={0,100,100,100,100,0,0,0,100};
 int tx=0,ty=0,tz=0,flag=0;
 void initGL() {
    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Set background color to black and opaque
@@ -14,7 +15,13 @@ void initGL() {
    glOrtho(-780, 780, -420, 420,-400,400); 
 }
 
-void drawQuad(int a,int b,int c, int d)
+void factor(int i)
+{
+	rx[i]=cx[i]*(1+(cz[i]+400)/800);
+	ry[i]=cy[i]*(1+(cz[i]+400)/800);
+}
+
+void drawQuad1(int a,int b,int c, int d)
 {
 	glVertex3i(cx[a],cy[a],cz[a]);
 	glVertex3i(cx[b],cy[b],cz[b]);
@@ -22,17 +29,35 @@ void drawQuad(int a,int b,int c, int d)
 	glVertex3i(cx[d],cy[d],cz[d]);
 }
 
-void drawTriangle(int a,int b,int c)
+void drawTriangle1(int a,int b,int c)
 {
 	glVertex3i(cx[a],cy[a],cz[a]);
 	glVertex3i(cx[b],cy[b],cz[b]);
 	glVertex3i(cx[c],cy[c],cz[c]);
+}
+void drawQuad(int a,int b,int c, int d)
+{
+	glVertex3i(rx[a],ry[a],rz[a]);
+	glVertex3i(rx[b],ry[b],rz[b]);
+	glVertex3i(rx[c],ry[c],rz[c]);
+	glVertex3i(rx[d],ry[d],rz[d]);
+}
+
+void drawTriangle(int a,int b,int c)
+{
+	glVertex3i(rx[a],ry[a],rz[a]);
+	glVertex3i(rx[b],ry[b],rz[b]);
+	glVertex3i(rx[c],ry[c],rz[c]);
 }
 
 void display() {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	   glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
+int i;
+	for(i=0;i<9;i++)
+		factor(i);
+
 
    glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_QUADS);
@@ -49,13 +74,15 @@ void display() {
 		drawQuad(1,2,7,0);
 	glEnd();
 	
-	int i;
+	
 	for(i=0;i<8;i++)
 	{
 		cx[i]+=tx;
 		cy[i]+=ty;
 		cz[i]+=tz;
 	}	
+	for(i=0;i<9;i++)
+		factor(i);
 	
 	   glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_QUADS);
@@ -78,7 +105,9 @@ void display11() {
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	   glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
-
+int i;
+for(i=0;i<9;i++)
+		factor(i);
 	glBegin(GL_TRIANGLES);
 		glColor3f(0.0f, 1.0f, 1.0f);
 		drawQuad(0,5,6,7);
@@ -92,7 +121,6 @@ void display11() {
 		drawTriangle(5,0,8);
 	glEnd();
 	
-	int i;
 	for(i=0;i<9;i++)
 	{
 		cx[i]+=tx;
@@ -100,6 +128,8 @@ void display11() {
 		cz[i]+=tz;
 	}	
 	
+	for(i=0;i<9;i++)
+		factor(i);
 	glBegin(GL_QUADS);
 		glColor3f(0.0f, 1.0f, 1.0f);
 		drawQuad(0,5,6,7);
