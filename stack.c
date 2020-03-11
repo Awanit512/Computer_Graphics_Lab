@@ -13,6 +13,9 @@ int cur=-1;
 int so_flag=0;
 int se_flag=1;
 
+int count=0;
+char statement[50]="Inserting an element!";
+
 void output(int x, int y, char *string)
 {
   glColor3f(0.0,1.0,1.0 );
@@ -29,14 +32,14 @@ void push()
 	se_flag=0;
 	if(cur==15)
 	{
-		//printf("Stack Overflow\n");
-		//output(300,300,"Stack Overflow");
 		so_flag=1;
 		return;
 	}
 	int a=rand()%100;
 	cur++;
 	stack[cur]=a;
+	count=1000;
+	sprintf(statement,"Inserting element : %d",a);
 	
 }
 
@@ -50,6 +53,10 @@ void pop()
 		return;
 	}
 	cur--;
+	if(cur==-1)
+		se_flag=1;
+	count=1000;
+	sprintf(statement,"Deleting element : %d",stack[cur+1]);
 }
 
 // function to initialize 
@@ -85,6 +92,30 @@ void printNode(int pos,int val)
  	output(-10,-370+50*pos,temp);
 }
 
+void drawArrow()
+{
+	int x=265,y=-375;
+	float d=cur;
+	if(cur==-1)
+	{
+		d=-0.5;
+	}
+	y=y+50*d;
+	glColor3f(0.0, 1.0, 0.0);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
+	glBegin(GL_POLYGON);
+	glVertex2i(x,y);
+	glVertex2i(x+40,y+10);
+	glVertex2i(x+40,y+3);
+	glVertex2i(x+100,y+3);
+	glVertex2i(x+100,y-3);
+	glVertex2i(x+40,y-3);
+	glVertex2i(x+40,y-10);
+	glEnd();
+}
+
+
 void display (void) 
 { 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -107,11 +138,17 @@ void display (void)
 	{
 		printNode(i,stack[i]);
 	}
-	
+	drawArrow();
 	if(so_flag)
 		output(300,300,"Stack Overflow");
 	if(se_flag)
 		output(300,300,"Stack Empty");
+		
+	if(count)
+	{
+		output(350,-300,statement);
+		count--;
+	}
 	glutSwapBuffers(); 
 }
 
